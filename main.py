@@ -7,11 +7,10 @@ from sql_app.crud import Jobs_CRUD
 app = FastAPI()
 
 
-
-
 @app.on_event("startup")
 async def start_db():
     await startup_db()
+
 
 @app.get('/checkdb')
 async def check_db(db: AsyncSession = Depends(get_db)):
