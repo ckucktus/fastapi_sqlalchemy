@@ -1,4 +1,3 @@
-
 import datetime
 from pydantic import BaseModel
 
@@ -10,11 +9,14 @@ class BaseJob(BaseModel):
     salary_to: int
     is_active: bool = True
 
+    class Config:
+        orm_mode = True
+
 class Job(BaseJob):
-    id: int
+    id: int = None
     user_id: int
-    created_at: datetime.datetime
-    updated_at: datetime.datetime
+    created_at: datetime.datetime = None
+    updated_at: datetime.datetime = None
 
 
 class JobIn(BaseJob):
