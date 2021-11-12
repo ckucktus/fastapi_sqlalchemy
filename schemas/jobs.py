@@ -1,6 +1,6 @@
 import datetime
 from pydantic import BaseModel
-
+from typing import Optional
 
 class BaseJob(BaseModel):
     title: str
@@ -13,10 +13,15 @@ class BaseJob(BaseModel):
         orm_mode = True
 
 class Job(BaseJob):
-    id: int = None
-    user_id: int
+    id: int = None #id вакансии
+    user_id: int #id создателя
     created_at: datetime.datetime = None
     updated_at: datetime.datetime = None
+
+class JobOut(BaseJob):
+    id: Optional[int]
+    class Config:
+        orm_mode = True
 
 
 class JobIn(BaseJob):
