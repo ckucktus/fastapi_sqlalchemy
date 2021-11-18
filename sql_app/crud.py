@@ -59,7 +59,7 @@ class Jobs_CRUD:
     async def delete_job(pk:int, db:AsyncSession): # тут работает по айди
         # query = delete(Jobs).where(Jobs.id == pk).returning(Jobs.id)
         job = await Jobs_CRUD.get_job_by_id(pk, db)
-        db.delete(job)
+        await db.delete(job)
         return job
 
 class Users_CRUD:
@@ -76,8 +76,9 @@ class Users_CRUD:
     async def get_by_id(pk:int, db:AsyncSession) -> Users:
         query = select(Users).where(Users.id == pk)
         result = await db.execute(query)
+        result = result.first()
         if result:
-            return result.first()[0]
+            return result[0]
 
     @staticmethod
     async def create(user: UserIn, db:AsyncSession) -> Users:
@@ -104,5 +105,6 @@ class Users_CRUD:
     async def get_by_email(email: str, db:AsyncSession) -> Users:
         query = select(Users).where(Users.email == email)
         result = await db.execute(query)
+        result = result.first()
         if result:
-            return result.first()[0]
+            return result[0]
