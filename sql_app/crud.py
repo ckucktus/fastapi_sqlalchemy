@@ -11,7 +11,7 @@ class Jobs_CRUD:
 
     @staticmethod
     async def get_list_of_jobs(offset:int , limit:int, db:AsyncSession):
-        query = select(Jobs).offset(offset).limit(limit)
+        query = select(Jobs).offset(offset).limit(limit).where(Jobs.is_active == True)
         return await db.execute(query)
 
     @staticmethod
