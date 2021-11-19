@@ -24,7 +24,7 @@ async def update_user(user: UserIn,
     return updated_user
 
 @router.get('/', response_model=BaseUser)
-async def get_user_by_id(pk:int, db: AsyncSession = Depends(get_db)):
+async def get_user_by_id(pk:int = Query(..., ge=0), db: AsyncSession = Depends(get_db)):
     result = await Users_CRUD.get_by_id(pk, db)
     if result:
         result

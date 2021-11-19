@@ -1,44 +1,11 @@
-from fastapi import responses, FastAPI, Depends, HTTPException, status
-from fastapi.testclient import TestClient
 from httpx import AsyncClient
 import pytest
-from endpoints import auth, jobs, users
-from sql_app import  startup_db
-from sql_app.crud import *
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from dependency import get_db, get_current_user
+from sql_app.crud import Users_CRUD
 from main import app
-from sqlalchemy.orm import sessionmaker, declarative_base
-from sqlalchemy.sql.schema import MetaData
-from core.security import create_access_token, decode_access_token
-from random import randint
+from core.security import create_access_token
 
 pytestmark = pytest.mark.asyncio
 
-# class override_dependency: # возвращает текущего пользователя расшифровывая его токен и вытаскивая из него id 
-    
-#     def __init__(self) -> None:
-#         pass
-#     def __call__(self, *args: Any, **kwds: Any) -> Any:
-#         pass
-
-#     token: str,
-
-#     db: AsyncSession = Depends(get_db)
-#     ) -> Users:
-#     cred_exception = HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Credentials are not valid")
-#     payload = decode_access_token(token)
-#     if payload is None:
-#         raise cred_exception
-#     user_id: int = int(payload.get("sub"))
-#     if user_id is None:
-#         raise cred_exception
-#     user = await Users_CRUD.get_by_id(user_id, db)
-#     if user is None:
-#         return cred_exception
-#     return user
-
-# app.dependency_overrides[get_current_user] = override_dependency
 
 
 
@@ -103,7 +70,7 @@ class TestUpdateUser:
 
 class TestGetUserById:
     @pytest.mark.parametrize(
-        "pk, status",[(0, 404), (2,200), (5, 404), (99999, 404)]
+        "pk, status",[(0, 404), (2,200), (5, 404), (99999, 404), (-1, 422)]
     )
     async def test_get_by_id(self, client:AsyncClient, pk:int, status:int):
         response = await client.get(app.url_path_for('get_user_by_id'), 
@@ -127,4 +94,3 @@ class TestGetListUsers:
         assert response.status_code == status
         if status == 200:
             len(response.json()) == limit
-            

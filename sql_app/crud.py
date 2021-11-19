@@ -15,36 +15,39 @@ class Jobs_CRUD:
         return await db.execute(query)
 
     @staticmethod
-    async def get_job_by_id(pk: int, db: AsyncSession):
+    async def get_job_by_id(pk: int, db: AsyncSession) -> Jobs:
         # query = db.query(Jobs).get(pk)
         # result = await db.execute(query)  # тут работает по айди
         # return result
         query = select(Jobs).where(Jobs.id == pk)
         result = await db.execute(query)
+        result = result.first()
         if result:
-            return result.first()[0]
+            return result[0]
 
     @staticmethod
     async def create(user_id: int, job:BaseJob, db:AsyncSession ) -> Jobs:
-        new_job = job.dict()
-        new_job['user_id'] = user_id
-        query = insert(Jobs).values(new_job)
-        result = await db.execute(query)
-        new_job['id'] = result.inserted_primary_key[0]
-        return new_job
+        # new_job = job.dict()
+        # new_job['user_id'] = user_id
+        # query = insert(Jobs).values(new_job)
+        # result = await db.execute(query)
+        # pk = result.inserted_primary_key[0]
+        # job_instance = await Users_CRUD.get_by_id(pk, db)
+        # return job_instance
 
-        # new_job = Jobs(
-        #     user_id = user_id,
-        #     title = job.title,
-        #     description = job.description,
-        #     salary_from=job.salary_from,
-        #     salary_to=job.salary_to,
-        #     is_active=job.is_active
-        # )
-        # id = db.add(new_job)
-        # print(id)
-        #return new_job
-        return None
+        new_job = Jobs(
+            user_id = user_id,
+            title = job.title,
+            description = job.description,
+            salary_from=job.salary_from,
+            salary_to=job.salary_to,
+            is_active=job.is_active
+        )
+        db.add(new_job)
+        await db.commit()
+        # await db.refresh(new_job)
+        return new_job
+        
 
     @staticmethod #редактировать может только создатель и суперюзер
     async def update_job(pk: int, job: BaseJob, db: AsyncSession) -> Jobs:
