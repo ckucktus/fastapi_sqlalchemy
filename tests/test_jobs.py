@@ -4,7 +4,6 @@ from sqlalchemy.ext.asyncio.session import AsyncSession
 from sql_app.crud import Jobs_CRUD, Users_CRUD
 from main import app
 from core.security import create_access_token
-from sqlalchemy import join, select
 
 from sql_app.models import Jobs, Users
 

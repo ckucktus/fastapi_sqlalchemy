@@ -13,11 +13,7 @@ from core.security import create_access_token
 from sql_app.models import Users
 from typing import Generator
 
-'''мне пригодится 
-фикстура для получения юзера (передаю туда токен из которого вытаскивается id и делается запрос к бд)
-1) генерация токена для гет каррент юзера(импорт уже готовой функции)
-2)
-'''
+
 @pytest.fixture(scope="session")
 def event_loop(request) -> Generator:
     """Create an instance of the default event loop for each test case."""
